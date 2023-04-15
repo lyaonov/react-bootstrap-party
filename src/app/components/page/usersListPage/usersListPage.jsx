@@ -5,7 +5,7 @@ import Pagination from "../../common/pagination";
 import api from "../../../api";
 import GroupList from "../../common/groupList";
 import SearchStatus from "../../ui/searchStatus";
-import UserTable from "../../usersTable";
+import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
