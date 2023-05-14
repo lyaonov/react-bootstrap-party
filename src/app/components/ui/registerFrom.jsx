@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
+import api from '../../api'
+import SelectField from "../common/form/selectField";
+import RadioField from "../common/form/radioField";
 
-const LoginForm = () => {
-    const [data, setData] = useState({ email: "", password: "" });
+const RegisterForm = () => {
+    const [data, setData] = useState({ email: "", password: "", profession: '', sex: 'male' });
     const [errors, setErrors] = useState({});
+    const [professions, setProfession] = useState();
+
+    useEffect(() => {
+        api.professions.fetchAll().then((data) => setProfession(data));
+    }, []);
+
     const handleChange = ({ target }) => {
         setData((prevState) => ({
             ...prevState,
@@ -33,6 +42,11 @@ const LoginForm = () => {
             min: {
                 message: "Пароль должен состоять минимум из 8 символов",
                 value: 8
+            }
+        },
+        profession: {
+            isRequired: {
+                message: 'Обязательно выберете профессию'
             }
         }
     };
@@ -70,6 +84,19 @@ const LoginForm = () => {
                 onChange={handleChange}
                 error={errors.password}
             />
+            <SelectField
+                onChange={handleChange}
+                options={professions}
+                defaultOption='Choose...'
+                error={errors.profession}
+                value={data.profession}
+                label='Выберете профессию:' />
+            <RadioField 
+            options={[{ name: 'Male', value: 'male' }, { name: 'Female', value: 'female' }]} 
+            value={data.sex}
+            name='sex'
+            onChange={handleChange}
+            />
             <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
@@ -79,6 +106,6 @@ const LoginForm = () => {
             </button>
         </form>
     )
-};
+}
 
-export default LoginForm;
+export default RegisterForm;
