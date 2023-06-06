@@ -3,14 +3,19 @@ import PropTypes from 'prop-types'
 const SelectField = ({ label, value, onChange, defaultOption, options, error }) => {
     const optionsArray = !Array.isArray(options) && typeof(options) === 'object' ?
         Object.keys(options).map(optionName => ({ name: options[optionName].name, value: options[optionName]._id })) : options
-    const getInputClasses = () => {
+    
+        const handleChange = ({target}) => {
+            onChange({ name: target.name, value: target.value })
+        }
+
+        const getInputClasses = () => {
         return "form-select" + (error ? " is-invalid" : "");
     };
 
     return (
         <div className="mb-4">
             <label html-for="validationCustom04" className="form-label">{label}</label>
-            <select className={getInputClasses()} id="validationCustom04" required value={value} name="profession" onChange={onChange} >
+            <select className={getInputClasses()} id="validationCustom04" required value={value} name="profession" onChange={handleChange} >
                 <option disabled value="">{defaultOption}</option>
                 {
                     optionsArray && optionsArray.map(option => <option

@@ -4,21 +4,26 @@ import { validator } from "../../utils/validator";
 import api from '../../api'
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
+import MultiSelectField from "../common/form/multiSelect";
 
 const RegisterForm = () => {
-    const [data, setData] = useState({ email: "", password: "", profession: '', sex: 'male' });
+    const [data, setData] = useState({ email: "", password: "", profession: '', sex: 'male', qualities: [] });
     const [errors, setErrors] = useState({});
     const [professions, setProfession] = useState();
+    const [qualities, setQualities] = useState({});
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
+        api.qualities.fetchAll().then((data) => setQualities(data));
+
     }, []);
 
-    const handleChange = ({ target }) => {
-        setData((prevState) => ({
-            ...prevState,
-            [target.name]: target.value
-        }));
+    const handleChange = (target) => {
+            setData((prevState) => ({
+                ...prevState,
+                [target.name]: target.value
+            }));
+
     };
     const validatorConfig = {
         email: {
@@ -91,12 +96,14 @@ const RegisterForm = () => {
                 error={errors.profession}
                 value={data.profession}
                 label='Выберете профессию:' />
-            <RadioField 
-            options={[{ name: 'Male', value: 'male' }, { name: 'Female', value: 'female' }]} 
-            value={data.sex}
-            name='sex'
-            onChange={handleChange}
+            <RadioField
+                options={[{ name: 'Male', value: 'male' }, { name: 'Female', value: 'female' }]}
+                value={data.sex}
+                name='sex'
+                onChange={handleChange}
+                label='Выберете ваш пол'
             />
+            <MultiSelectField onChange={handleChange} options={qualities} name='qualities' label='Выберете ваши качества' />
             <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
