@@ -9,9 +9,11 @@ const UserPage = ({ userId }) => {
     const [user, setUser] = useState();
     useEffect(() => {
         api.users.getById(userId).then((data) => setUser(data));
-    },[]);
-    const handleClick = () => {
-        history.push("/users");
+    }, []);
+    const handleClick = (edit = false) => {
+        edit ? history.push(history.location.pathname + "/edit") : history.push("/users");
+
+
     };
     if (user) {
         return (
@@ -21,7 +23,8 @@ const UserPage = ({ userId }) => {
                 <Qualities qualities={user.qualities} />
                 <p>completedMeetings: {user.completedMeetings}</p>
                 <h2>Rate: {user.rate}</h2>
-                <button onClick={handleClick}> Все Пользователи</button>
+                <button onClick={() => handleClick(true)}>Изменить</button>
+                <button onClick={() => handleClick()}>Все Пользователи</button>
             </div>
         );
     } else {
