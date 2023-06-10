@@ -20,10 +20,10 @@ const RegisterForm = () => {
     }, []);
 
     const handleChange = (target) => {
-            setData((prevState) => ({
-                ...prevState,
-                [target.name]: target.value
-            }));
+        setData((prevState) => ({
+            ...prevState,
+            [target.name]: target.value
+        }));
 
     };
     const validatorConfig = {
@@ -55,7 +55,7 @@ const RegisterForm = () => {
                 message: 'Обязательно выберете профессию'
             }
         },
-        license:{
+        license: {
             isRequired: {
                 message: "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
             }
@@ -96,6 +96,7 @@ const RegisterForm = () => {
                 error={errors.password}
             />
             <SelectField
+                name='proffessions'
                 onChange={handleChange}
                 options={professions}
                 defaultOption='Choose...'
@@ -109,7 +110,7 @@ const RegisterForm = () => {
                 onChange={handleChange}
                 label='Выберете ваш пол'
             />
-            <MultiSelectField onChange={handleChange} options={qualities} name='qualities' label='Выберете ваши качества' />
+            <MultiSelectField defaultValue={data.qualities} onChange={handleChange} options={qualities} name='qualities' label='Выберете ваши качества' />
             <CheckBoxField value={data.license} onChange={handleChange} name='license' error={errors.license} >Подтвердить <a>лицензионное соглашение</a></CheckBoxField>
             <button
                 className="btn btn-primary w-100 mx-auto"

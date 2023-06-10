@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-const SelectField = ({ label, value, onChange, defaultOption, options, error }) => {
+const SelectField = ({ label, value, onChange, defaultOption, options, error, name }) => {
     const optionsArray = !Array.isArray(options) && typeof(options) === 'object' ?
         Object.keys(options).map(optionName => ({ name: options[optionName].name, value: options[optionName]._id })) : options
     
@@ -14,8 +14,8 @@ const SelectField = ({ label, value, onChange, defaultOption, options, error }) 
 
     return (
         <div className="mb-4">
-            <label html-for="validationCustom04" className="form-label">{label}</label>
-            <select className={getInputClasses()} id="validationCustom04" required value={value} name="profession" onChange={handleChange} >
+            <label htmlFor={name} className="form-label">{label}</label>
+            <select className={getInputClasses()} id={name} required value={value} name={name} onChange={handleChange} >
                 <option disabled value="">{defaultOption}</option>
                 {
                     optionsArray && optionsArray.map(option => <option
@@ -38,6 +38,7 @@ SelectField.propTypes = {
     defaultOption: PropTypes.string,
     label: PropTypes.string,
     value: PropTypes.string,
+    name: PropTypes.string,
     onChange: PropTypes.func,
     error: PropTypes.string,
     options: PropTypes.oneOfType([PropTypes.object,PropTypes.array]),
