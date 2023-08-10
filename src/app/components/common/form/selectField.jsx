@@ -10,7 +10,9 @@ const SelectField = ({
     error,
     name
 }) => {
-    const handleChange = ({ target }) => {
+    const handleChange = ( {target} ) => {
+
+        console.log(target.name, target.value)
         onChange({ name: target.name, value: target.value });
     };
     const getInputClasses = () => {
