@@ -8,16 +8,27 @@ import CheckBoxField from "../common/form/checkBoxField";
 
 import { useQuality } from "../../hooks/useQuality";
 import { useProffession } from '../../hooks/useProffession'
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const RegisterForm = () => {
-    const [data, setData] = useState({ email: "", password: "", profession: '', sex: 'male', qualities: [], license: false });
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+        name:"",
+        profession: '',
+        sex: 'male',
+        qualities: [],
+        license: false
+    });
     const [errors, setErrors] = useState({});
     const { proffessions: professions } = useProffession();
     const { qualitys: qualities } = useQuality();
-    console.log(professions);
+    const { signUp } = useAuth();
+    const history = useHistory()
 
     const handleChange = (target) => {
-        console.log(target)
+
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
@@ -31,6 +42,15 @@ const RegisterForm = () => {
             },
             isEmail: {
                 message: "Email введен некорректно"
+            }
+        },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения"
+            },
+            min: {
+                message: "Имя должно состоять минимум из 2 символов",
+                value: 2
             }
         },
         password: {
@@ -59,9 +79,11 @@ const RegisterForm = () => {
             }
         }
     };
+
     useEffect(() => {
         validate();
     }, [data]);
+
     const validate = () => {
         const errors = validator(data, validatorConfig);
         setErrors(errors);
@@ -69,12 +91,17 @@ const RegisterForm = () => {
     };
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
-        const newData = {...data, qualities: data.qualities.map(q => q.value)}
-        console.log(newData)
+        const newData = { ...data, qualities: data.qualities.map(q => q.value) }
         if (!isValid) return;
+        try {
+            await signUp(newData);
+            history.push("/")
+        } catch (error) {
+            setErrors(error)
+        }
     };
 
     const qualitiesList = qualities.map((qual) => ({ label: qual.name, value: qual._id }))
@@ -90,6 +117,13 @@ const RegisterForm = () => {
                 value={data.email}
                 onChange={handleChange}
                 error={errors.email}
+            />
+            <TextField
+                label="Имя"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                error={errors.name}
             />
             <TextField
                 label="Пароль"
